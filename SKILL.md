@@ -144,7 +144,7 @@ python3 $HOME/.hermes/skills/wechat-api-lite/scripts/wechat_api.py upload-thumb 
 
 ### 成功响应无 errcode
 
-以下接口成功时不返回 `errcode`，判断成功只看业务字段是否存在：
+以下接口成功时不返回 `errcode`，判断成功仅看业务字段是否存在：
 
 | 接口 | 成功判断依据 |
 |------|-------------|
@@ -152,6 +152,15 @@ python3 $HOME/.hermes/skills/wechat-api-lite/scripts/wechat_api.py upload-thumb 
 | `draft/count`（草稿数量） | `"total_count" in result` |
 
 ### url vs media_id
+
+- **正文 HTML 图片** → 用 `upload-image` 返回的 `url`
+- **草稿封面图** → 用 `upload-thumb` 返回的 `media_id`
+
+两者不可混用。
+
+### ⚠️ 草稿正文图注位置注意
+
+在 JSON 中写 HTML 正文时，如果要给配图加 caption 注释，**caption 必须紧跟在对应的 `<img>` 标签后面**，不要写在正文开头或其他位置。公众号渲染会把 caption 放在图片在正文中出现的相对位置，误放在文章顶部会导致 caption 跑到文章最下方显示。
 
 - **正文 HTML 图片** → 用 `upload-image` 返回的 `url`
 - **草稿封面图** → 用 `upload-thumb` 返回的 `media_id`

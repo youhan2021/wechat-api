@@ -2,6 +2,8 @@
 
 微信公众号 API 轻量化 Skill。只保留发布图文必需的功能：token 获取、封面图上传、正文图片上传、草稿创建。无多余命令，无依赖膨胀。
 
+[English](./README.md)
+
 > 通过 `npx skills add youhan2021/wechat-api-lite` 或同类 skills CLI 安装。
 
 ---

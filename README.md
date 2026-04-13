@@ -2,6 +2,8 @@
 
 A lightweight WeChat Official Account API skill. Covers only the essentials: token management, image upload, and draft creation. No bloat, minimal dependencies.
 
+[中文版](./README_zh.md)
+
 > Installed via `npx skills add youhan2021/wechat-api-lite` or similar skills CLI.
 
 ---
