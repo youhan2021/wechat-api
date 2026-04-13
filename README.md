@@ -1,65 +1,66 @@
 # wechat-api-lite
 
-微信公众号 API 轻量化工具。只保留发布图文必需的功能：一个 token 获取、一个文件上传、一个草稿创建。无花哨功能，无依赖膨胀。
+A lightweight WeChat Official Account API skill. Covers only the essentials: token management, image upload, and draft creation. No bloat, minimal dependencies.
+
+> Installed via `npx skills add youhan2021/wechat-api-lite` or similar skills CLI.
 
 ---
 
-## 功能列表
+## What it does
 
-| 命令 | 作用 |
-|------|------|
-| `token` | 获取 / 刷新 access_token |
-| `upload-thumb` | 上传封面图 → thumb_media_id |
-| `upload-image` | 上传正文图片 → media_id + url |
-| `create-draft` | 创建图文草稿 |
-| `draft-list` | 查看草稿箱数量 |
+| Command | Description |
+|---------|-------------|
+| `token` | Get / refresh access_token |
+| `upload-thumb` | Upload cover image → thumb_media_id |
+| `upload-image` | Upload body image → media_id + url |
+| `create-draft` | Create article draft |
+| `draft-list` | Show draft count |
 
 ---
 
-## 快速开始
+## Setup
 
-**1. 安装配置**
+**1. Copy and fill in credentials**
 
 ```bash
-# 复制配置示例文件
 cp ~/.hermes/skills/wechat-api-lite/config.env.example \
    ~/.hermes/skills/wechat-api-lite/config.env
 
-# 填入你的 AppID 和 AppSecret
-# 获取地址：mp.weixin.qq.com → 设置与开发 → 基本配置
+# Edit config.env with your AppID and AppSecret
+# Get them at: mp.weixin.qq.com → Settings → Basic Config
 ```
 
-**2. 上传封面图**
+**2. Upload a cover image**
 
 ```bash
 python3 ~/.hermes/skills/wechat-api-lite/scripts/wechat_api.py \
   upload-thumb ~/hermes/research/Cover.png
-# 返回 thumb_media_id
+# Returns thumb_media_id
 ```
 
-**3. 创建草稿**
+**3. Create a draft**
 
 ```bash
 python3 ~/.hermes/skills/wechat-api-lite/scripts/wechat_api.py \
   create-draft ~/hermes/research/draft.json
 ```
 
-**4. 预览发布**
+**4. Preview & publish**
 
-登录 [mp.weixin.qq.com](https://mp.weixin.qq.com) → 草稿箱 → 预览 → 发布
+Sign in to [mp.weixin.qq.com](https://mp.weixin.qq.com) → Drafts → Preview → Publish
 
 ---
 
-## 草稿 JSON 格式
+## Draft JSON Format
 
 ```json
 [
   {
-    "title": "文章标题（不超过32字）",
-    "author": "作者名",
-    "digest": "摘要",
-    "content": "<p>HTML 格式正文...</p>",
-    "thumb_media_id": "upload-thumb 返回的 ID",
+    "title": "Article title (max 32 chars)",
+    "author": "Author name",
+    "digest": "Article summary",
+    "content": "<p>HTML formatted body...</p>",
+    "thumb_media_id": "ID returned by upload-thumb",
     "show_cover_pic": 1,
     "need_open_comment": 1,
     "only_fans_can_comment": 0
@@ -69,30 +70,29 @@ python3 ~/.hermes/skills/wechat-api-lite/scripts/wechat_api.py \
 
 ---
 
-## 常见问题
+## FAQ
 
-**API 返回 40001？**
-token 过期，清除缓存后重试：
+**Getting 40001 errors?**
+Token expired. Clear the cache and retry:
+
 ```bash
 rm ~/.hermes/skills/wechat-api-lite/scripts/.token_cache
 ```
 
-**图片用 url 还是 media_id？**
-- 正文 HTML 图片链接 → 用 `upload-image` 返回的 `url`
-- 封面图 ID → 用 `upload-thumb` 返回的 `media_id`
-
-两者不可混用。
+**url vs media_id — which to use?**
+- Image links in HTML body → `url` from `upload-image`
+- Cover image in draft → `media_id` from `upload-thumb`
 
 ---
 
-## 与 wechat-post 配合
+## Workflow with wechat-post
 
 ```
-wechat-post 生成 Markdown
+wechat-post generates Markdown
         ↓
-将 Markdown 转为 HTML 写入 draft.json
+Convert Markdown to HTML, write to draft.json
         ↓
-wechat-api-lite upload-thumb（封面）
+wechat-api-lite upload-thumb (cover)
         ↓
-wechat-api-lite create-draft（发布）
+wechat-api-lite create-draft (publish)
 ```
