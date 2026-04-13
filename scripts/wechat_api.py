@@ -222,12 +222,16 @@ def create_draft(articles):
     payload = {"articles": articles}
     result = wechat_request("POST", url, data=payload)
 
-    if result.get("errcode") == 0:
+    # 微信新增草稿接口成功时不返回 errcode，仅检查 media_id
+    if "media_id" in result:
         media_id = result.get("media_id", "N/A")
         print(f"✅ 草稿创建成功: media_id={media_id}")
         return {"media_id": media_id}
     else:
-        print(f"❌ 创建草稿失败: {result}")
+        errcode = result.get("errcode", -1)
+        errmsg  = result.get("errmsg", "unknown error")
+        print(f"❌ 创建草稿失败: [{errcode}] {errmsg}")
+        print(f"   完整响应: {result}")
         sys.exit(1)
 
 
@@ -239,12 +243,15 @@ def get_draft_list():
     url = f"https://api.weixin.qq.com/cgi-bin/draft/count?access_token={token}"
     result = wechat_request("GET", url)
 
-    if result.get("errcode") == 0:
+    # 微信草稿计数接口成功时直接返回 total_count，无 errcode
+    if "total_count" in result:
         count = result.get("total_count", 0)
         print(f"草稿箱共有 {count} 篇草稿")
         return result
     else:
-        print(f"❌ 获取草稿列表失败: {result}")
+        errcode = result.get("errcode", -1)
+        errmsg  = result.get("errmsg", "unknown error")
+        print(f"❌ 获取草稿列表失败: [{errcode}] {errmsg}")
         sys.exit(1)
 
 
